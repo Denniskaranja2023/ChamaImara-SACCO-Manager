@@ -41,8 +41,8 @@ document.addEventListener('DOMContentLoaded',()=>{
    investment.innerHTML= `<strong>Current Investment</strong>:ksh ${member.currentInvestment}`
    debt.innerHTML=`<strong>Current Debt</strong>:ksh ${member.currentDebts}`
    dividends.innerHTML=`<strong>Dividends</strong>:ksh ${member.dividends}`
-   deleteButton.innerHTML=`Remove <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>`
-   editButton.innerHTML=`Edit <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>`
+   deleteButton.innerHTML=`Remove <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>`
+   editButton.innerHTML=`Edit <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>`
    //share.textContent=
    //append elements to the container
    buttonDiv.appendChild(deleteButton)
@@ -57,6 +57,15 @@ document.addEventListener('DOMContentLoaded',()=>{
    //append container to the member detail div
    const memberSummary= document.getElementById('memberSummary')
    memberSummary.appendChild(container)
+   //add and eventListener to remove a member
+   deleteButton.addEventListener('click', (e)=> {
+     const containerDiv= e.target.closest(".container")
+     const memberId= containerDiv.id;
+     const confirmDelete =confirm("Do you want to remove member?")
+     if(!confirmDelete) return;
+     fetch(`http://localhost:3000/members/${memberId}`, {method:'DELETE'}).then(res=> {if (!res.ok) throw new Error("Delete failed");
+      containerDiv.remove();}).catch(error=>console.error("Error:",error))
+   })
   }
 
 
