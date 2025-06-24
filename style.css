@@ -15,9 +15,9 @@ body{
     text-align: center;
     color:white;
     border:1px solid black;
-    margin-bottom: 2%;
+    margin-bottom: 0;
     background-color: rgba(0, 0, 255, 0.616);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     width: auto;
     height: 1.5rem;
     padding: 0.5%;
@@ -30,7 +30,6 @@ body{
     justify-content: space-evenly;
     align-items: center;
     height: 15rem;
-    border: 1px solid;
     background-color: rgba(20, 38, 143, 0.041);  
     font-weight: 600;
     border-radius: 0.5rem;
@@ -42,7 +41,7 @@ body{
     background-size: 100lvh;
 }
 .aggregatedetails{
-    font-size:small;
+    font-size:medium;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -52,14 +51,20 @@ body{
 }
 .sectionDisplay{
     display: flex; 
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 #memberSummary{
-   background-color:white;
-   height: 30rem;
+   display:flex;
+   flex-wrap: wrap;
+   justify-content: space-evenly;
+   background-color:aliceblue;
+   height: fit-content;
    width: 90%;
    margin-left: 5%;
-   margin-top: 5%;
+   margin-top: 2%;
+   margin-bottom: 2%;
 }
 
 #memberDetails{
@@ -67,19 +72,22 @@ body{
     height: 30rem;
     width: 80%;
     margin-left:10%;
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
 #newMember{
      background-color: aliceblue;
      width: 80%;
      margin-left: 10%;
     height: fit-content;
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
 #statistics{
-    border: black solid 1px;
     width: 70%;
     margin-left: 15%;
-    margin-top:5%;
     height: fit-content;
+    background-color:rgba(20, 38, 143, 0.041);
 }
 .formDisplay{
     margin-top:1%;
@@ -99,4 +107,16 @@ input{
 }
 label{
     font-weight: 700;
+}
+.container{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    height: fit-content;
+    width: 250px;
+    border: black 1px solid;
+    border-radius: 20px;
+    background-color: rgba(20, 38, 143, 0.041);
+    padding: 2%;
+    margin-top: 7%;
 }

@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "James Mwangi",
-      "image": "https://via.placeholder.com/200?text=African+Person+1",
+      "image": "https://img.freepik.com/free-photo/handsome-african-american-man-posing_23-2148634065.jpg?semt=ais_items_boosted&w=740",
       "currentInvestment": 120000,
       "currentDebts": 0,
       "repayments": 0,
@@ -13,7 +13,7 @@
     {
       "id": 2,
       "name": "Eric Odhiambo",
-      "image": "https://via.placeholder.com/200?text=African+Person+2",
+      "image": "https://img.freepik.com/free-photo/vertical-shot-attractive-african-american-man-posing-smiling_181624-15027.jpg?semt=ais_items_boosted&w=740",
       "currentInvestment": 95000,
       "currentDebts": 0,
       "repayments": 0,
@@ -23,7 +23,7 @@
     {
       "id": 3,
       "name": "Daniel Njoroge",
-      "image": "https://via.placeholder.com/200?text=African+Person+3",
+      "image": "https://img.freepik.com/premium-photo/charming-african-american-man-smiling-with-hat_33839-4336.jpg?semt=ais_items_boosted&w=740",
       "currentInvestment": 140500,
       "currentDebts": 0,
       "repayments": 0,
@@ -32,8 +32,8 @@
     },
     {
       "id": 4,
-      "name": "Pauline Kamau",
-      "image": "https://via.placeholder.com/200?text=African+Person+4",
+      "name": "Paul Kamau",
+      "image": "https://img.freepik.com/free-photo/african-american-student-walking-park_1303-12720.jpg?semt=ais_items_boosted&w=740",
       "currentInvestment": 110000,
       "currentDebts": 0,
       "repayments": 0,
@@ -43,7 +43,7 @@
     {
       "id": 5,
       "name": "Anne Kilonzo",
-      "image": "https://via.placeholder.com/200?text=African+Person+2",
+      "image": "https://img.freepik.com/free-photo/afro-american-woman-model-studio_1303-13585.jpg?semt=ais_items_boosted&w=740",
       "currentInvestment": 88000,
       "currentDebts": 0,
       "repayments": 0,
@@ -53,7 +53,7 @@
     {
       "id": 6,
       "name": "Grace Otieno",
-      "image": "https://via.placeholder.com/200?text=African+Person+4",
+      "image": "https://img.freepik.com/free-photo/african-woman-posing-looking-up_23-2148747978.jpg?semt=ais_items_boosted&w=740",
       "currentInvestment": 130300,
       "currentDebts": 0,
       "repayments": 0,
