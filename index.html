@@ -8,37 +8,37 @@
     <script defer src="./index.js"></script>
 </head>
 <body>
-    <nav>
-        <h3><span>Chama</span>Imara</h3>
-        <p>|Your<span>SACCO Manager</span> of choice</p>
+    <nav class="navigation">
+        <h3><span style="color:blue;">Chama</span>Imara</h3>
+        <p style="font-weight: 700;">|Your<span style="color:blue">SACCO Manager</span> of choice</p>
     </nav>
-    <section>
-        <h3>Chama Aggregates</h3>
-        <div>Total Investment Value:</div>
-        <div>Total Debt Value:</div>
-        <div>Total Actual Interests</div>
-        <div>Total expected Interests</div>
-        <div>SACCO Net-Value:</div>
+    <section id="aggregates">
+        <h3 class="heading">Chama Aggregates</h3>
+        <div id="totalInvestment">Total Investment Value:</div>
+        <div id="totalDebt">Total Debt Value:</div>
+        <div id="actualInterests">Total Actual Interests</div>
+        <div id="expectedInterests">Total expected Interests</div>
+        <div id="netValue">SACCO Net-Value:</div>
     </section>
-    <section>
-        <h3>Member Summary</h3>
+    <section id="memberSummary">
+        <h3 class="heading">Member Summary</h3>
     </section>
-    <section>
-         <h3>Member Details</h3>
+    <section id="memberDetails">
+         <h3 class="heading">Member Details</h3>
     </section>
-    <section>
+    <section id="newMember">
         <div>
-            <h3>Add a new member</h3>
+            <h3 class="heading">Add a new member</h3>
             <img src="" alt="">
         </div>
-        <form>
-            <label>Name:<input type="text"></label> <br>
-            <label>image:<input type="url"></label><br>
-            <label>current-investment: <input type="number"></label><br>
+        <form id="newMemberForm">
+            <label>Name:<input type="text" name="name"></label> <br>
+            <label>image:<input type="url" name="image"></label><br>
+            <label>current-investment: <input type="number" name="currentInvestment"></label><br>
         </form>
     </section>
-    <section>
-        <h3>Pie Chart(Member share value)</h3>
+    <section id="statistics">
+        <h3 class="heading">Pie Chart(Member share value)</h3>
     </section>
 </body>
 </html>
