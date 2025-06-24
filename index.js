@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded',()=>{
   //A functiom to render members onto the summary div 
   function renderMembers() {
@@ -57,7 +59,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    //append container to the member detail div
    const memberSummary= document.getElementById('memberSummary')
    memberSummary.appendChild(container)
-   //add and eventListener to remove a member
+   //add an eventListener to remove a member
    deleteButton.addEventListener('click', (e)=> {
      const containerDiv= e.target.closest(".container")
      const memberId= containerDiv.id;
@@ -66,7 +68,90 @@ document.addEventListener('DOMContentLoaded',()=>{
      fetch(`http://localhost:3000/members/${memberId}`, {method:'DELETE'}).then(res=> {if (!res.ok) throw new Error("Delete failed");
       containerDiv.remove();}).catch(error=>console.error("Error:",error))
    })
+  //add an eventListener to edit a member's details
+  editButton.addEventListener("click",(e)=>{
+    const targetDiv= e.target.closest('.container')
+    const memberId= targetDiv.id
+    fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{renderDetails(member)})
+  })
   }
 
+//function to render the details of a member on the details div
+function renderDetails(member){
+  const memberDetails= document.querySelector('#memberDetails')
+      memberDetails.style.display= "block"
+  //create elements to render details on member details
+      const mainContainer= document.createElement("div")
+      mainContainer.id= member.id
+      const name= document.createElement('h3')
+      const image= document.createElement('img')
+      image.style.height="200px";
+      image.style.width="200px";
+      image.style.borderRadius="50%";
+      //create elements for investment div
+      const investmentDiv= document.createElement('div')
+        const currentInvestment=document.createElement('p')
+        const newInvestmentForm= document.createElement('form')
+          const newInvestment=document.createElement('input')
+            newInvestment.type="number"
+            newInvestment.name="investment"
+            newInvestment.placeholder="10000"
+            newInvestment.label="New Investment"
+          const newInvestmentSubmit=document.createElement('input')
+            newInvestmentSubmit.type="submit"
+      //create the elements for debt div
+      const debtDiv= document.createElement('div')
+        const currentDebt=document.createElement('p')
+        const amountBorrowedForm= document.createElement('form')
+          const amountBorrowed=document.createElement('input')
+            amountBorrowed.type="number"
+            amountBorrowed.name="borrowed"
+            amountBorrowed.placeholder="10000"
+            amountBorrowed.label= "Amount Borrowed"
+          const amountBorrowedSubmit=document.createElement('input')
+            amountBorrowedSubmit.type="submit"
+      //create the elements for repayment form
+      const repaymentForm= document.createElement('form')
+          const repayment=document.createElement('input')
+            repayment.type="number"
+            repayment.name="repayment"
+            repayment.placeholder="10000"
+            repayment.labels= "Amount repayed"
+          const repaymentSubmit=document.createElement('input')
+            repaymentSubmit.type="submit"
+      const expectedInterests= document.createElement('p')
+     //create a cancel button
+     const cancelButton= document.createElement('button')
+     cancelButton.textContent="Cancel"
+     //assign values from member data:
+     currentInvestment.innerHTML=`<strong>Current Investment</strong>: ksh${member.currentInvestment}`
+     currentDebt.innerHTML=`<strong>Current Debt</strong>: ksh${member.currentDebts}`
+     expectedInterests.innerHTML=`<strong>Total expected interests:</strong>`
+     name.textContent= member.name
+     image.src=member.image
+     //appending the investment elements
+      investmentDiv.appendChild(currentInvestment)
+      newInvestmentForm.appendChild(newInvestment)
+      newInvestmentForm.appendChild(newInvestmentSubmit)
+      investmentDiv.appendChild(newInvestmentForm)
+     //append the debt elements
+      debtDiv.appendChild(currentDebt)
+      amountBorrowedForm.appendChild(amountBorrowed)
+      amountBorrowedForm.appendChild(amountBorrowedSubmit)
+      debtDiv.appendChild(amountBorrowedForm)
+    //append the repayment elements
+      repaymentForm.appendChild(repayment)
+      repaymentForm.appendChild(repaymentSubmit)
+    //append all major divs to container
+    mainContainer.appendChild(name)
+    mainContainer.appendChild(image)
+    mainContainer.appendChild(investmentDiv)
+    mainContainer.appendChild(debtDiv)
+    mainContainer.appendChild(expectedInterests)
+    mainContainer.appendChild(repaymentForm)
+    mainContainer.appendChild(cancelButton)
+    //append the container to the member details div
+    memberDetails.appendChild(mainContainer)
+    }
 
 })
