@@ -1,0 +1,64 @@
+{
+  "members": [
+    {
+      "id": 1,
+      "name": "James Mwangi",
+      "image": "https://via.placeholder.com/200?text=African+Person+1",
+      "currentInvestment": 120000,
+      "currentDebts": 0,
+      "repayments": 0,
+      "interestsOnLoan": 0,
+      "dividends": 0
+    },
+    {
+      "id": 2,
+      "name": "Eric Odhiambo",
+      "image": "https://via.placeholder.com/200?text=African+Person+2",
+      "currentInvestment": 95000,
+      "currentDebts": 0,
+      "repayments": 0,
+      "interestsOnLoan": 0,
+      "dividends": 0
+    },
+    {
+      "id": 3,
+      "name": "Daniel Njoroge",
+      "image": "https://via.placeholder.com/200?text=African+Person+3",
+      "currentInvestment": 140500,
+      "currentDebts": 0,
+      "repayments": 0,
+      "interestsOnLoan": 0,
+      "dividends": 0
+    },
+    {
+      "id": 4,
+      "name": "Pauline Kamau",
+      "image": "https://via.placeholder.com/200?text=African+Person+4",
+      "currentInvestment": 110000,
+      "currentDebts": 0,
+      "repayments": 0,
+      "interestsOnLoan": 0,
+      "dividends": 0
+    },
+    {
+      "id": 5,
+      "name": "Anne Kilonzo",
+      "image": "https://via.placeholder.com/200?text=African+Person+2",
+      "currentInvestment": 88000,
+      "currentDebts": 0,
+      "repayments": 0,
+      "interestsOnLoan": 0,
+      "dividends": 0
+    },
+    {
+      "id": 6,
+      "name": "Grace Otieno",
+      "image": "https://via.placeholder.com/200?text=African+Person+4",
+      "currentInvestment": 130300,
+      "currentDebts": 0,
+      "repayments": 0,
+      "interestsOnLoan": 0,
+      "dividends": 0
+    }
+  ]
+}
