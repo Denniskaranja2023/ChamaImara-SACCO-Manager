@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   //execute the function totalActualInterests
   totalActualInterests();
-
+  
   //4. A function for determining the totalExpectedInterests of the Chama
   function totalExpectedInterests() {
     fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       netTotalValue.textContent=`ksh ${total}`
       netTotalValue.style.color="blue"
       netTotalValue.style.textAlign="center"
-      netTotalValue.id="netValue"
+      netTotalValue.id="totalNetValue"
       const netValueDiv=document.querySelector('#netValue')
       netValueDiv.appendChild(netTotalValue)   
    }).catch(error=> console.error('There is an error', error))}
@@ -285,6 +285,88 @@ function renderDetails(member){
     mainContainer.appendChild(cancelButton)
     //append the container to the member details div
     memberDetails.appendChild(mainContainer)
+
+    //add submit event Listener to newInvestmentsForm
+     newInvestmentForm.addEventListener('submit',(e)=>{
+      //confirms whether the input value is the desired one
+      const confirmed= confirm('Are you sure member is investing this amount?')
+      if(!confirmed) {
+        e.preventDefault(); 
+        return;
+      }
+      e.preventDefault();                         //prevent an immediate refresh on submission
+     const container= e.target.closest('.detailView')
+     const memberId=container.id
+     //transforms the inputed value into a decimal number value
+      const newInvestment= parseFloat(document.getElementById('investment').value)
+      fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{
+          const newCurrentInvestment= (member.currentInvestment+ newInvestment)
+        // once newcurrent investment is calculated, send request to update server
+        fetch(`http://localhost:3000/members/${memberId}`, {
+           method: "PATCH",
+           headers:{
+            "Content-Type":"application/json"
+           },
+           body: JSON.stringify({currentInvestment:newCurrentInvestment})
+        }).then(res=> {
+          if(!res.ok) throw new Error('Could not update currentInvestment');
+          return res.json()
+        }).then(()=>{ 
+          const summaryDiv= document.getElementById("memberSummary")
+          summaryDiv.innerHTML=" " //clear summary Div
+          renderMembers(); //refresh summary display
+          const investDisplay= document.getElementById('investmentValue')
+          investDisplay.remove() //removes former total display
+          totalInvestment();  //calls function to update newinvestment Total
+          const netValueDisplay= document.getElementById('totalNetValue')
+          netValueDisplay.remove() //removes former netValue
+          netValue(); //calls function to update netValue
+          newInvestmentForm.reset();
+        })
+      })
+    })
+
+     //add submit event Listener to amountBorrowedForm
+     amountBorrowedForm.addEventListener('submit',(e)=>{
+      //confirms whether the input value is the desired one
+      const confirmed= confirm('Are you sure member is borrowing this amount?')
+      if(!confirmed) {
+        e.preventDefault(); 
+        return;
+      }
+      e.preventDefault();                         //prevent an immediate refresh on submission
+     const container= e.target.closest('.detailView')
+     const memberId=container.id
+     //transforms the inputed value into a decimal number value
+      const newAmountBorrowed= parseFloat(document.getElementById('borrowed').value)
+      fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{
+          const newCurrentDebt= (member.currentDebts+ newAmountBorrowed)
+        // once newAmountBorrowed is calculated, send request to update server
+        fetch(`http://localhost:3000/members/${memberId}`, {
+           method: "PATCH",
+           headers:{
+            "Content-Type":"application/json"
+           },
+           body: JSON.stringify({currentDebts:newCurrentDebt})
+        }).then(res=> {
+          if(!res.ok) throw new Error('Could not update currentDebts');
+          return res.json()
+        }).then(()=>{ 
+          const summaryDiv= document.getElementById("memberSummary")
+          summaryDiv.innerHTML=" " //clear summary Div
+          renderMembers(); //refresh summary display
+          const debtDisplay= document.getElementById('debtValue')
+          debtDisplay.remove() //removes former total display
+          totalDebt();  //calls function to update Debt Total
+          const netValueDisplay= document.getElementById('totalNetValue')
+          netValueDisplay.remove() //removes former netValue
+          netValue(); //calls function to update netValue
+          amountBorrowedForm.reset();
+        })
+      })
+    })
+
+
     //add event LIstner to cancelbutton to remove created container from detail div
     cancelButton.addEventListener('click', (e)=>{
       const container= e.target.closest('.detailView')

@@ -4,45 +4,45 @@
       "id": "1",
       "name": "James Mwangi",
       "image": "https://img.freepik.com/free-photo/handsome-african-american-man-posing_23-2148634065.jpg?semt=ais_items_boosted&w=740",
-      "currentInvestment": 150000,
+      "currentInvestment": 250000,
       "currentDebts": 0,
       "repayments": 0,
       "expectedDividends": 0,
       "dividends": 0,
-      "sharePercent":15
+      "sharePercent": 15
     },
     {
       "id": "2",
       "name": "Eric Odhiambo",
       "image": "https://img.freepik.com/free-photo/vertical-shot-attractive-african-american-man-posing-smiling_181624-15027.jpg?semt=ais_items_boosted&w=740",
-      "currentInvestment": 250000,
+      "currentInvestment": 300000,
       "currentDebts": 0,
       "repayments": 0,
-      "expectedDividends":0,
+      "expectedDividends": 0,
       "dividends": 0,
-      "sharePercent":25
+      "sharePercent": 25
     },
     {
       "id": "4",
       "name": "Paul Mwashamba",
       "image": "https://img.freepik.com/free-photo/african-american-student-walking-park_1303-12720.jpg?semt=ais_items_boosted&w=740",
-      "currentInvestment": 100000,
+      "currentInvestment": 250000,
       "currentDebts": 0,
       "repayments": 0,
       "expectedDividends": 0,
       "dividends": 0,
-      "sharePercent":10
+      "sharePercent": 10
     },
     {
       "id": "5",
       "name": "Anne Kilonzo",
       "image": "https://img.freepik.com/free-photo/afro-american-woman-model-studio_1303-13585.jpg?semt=ais_items_boosted&w=740",
-      "currentInvestment": 150000,
+      "currentInvestment": 200000,
       "currentDebts": 0,
       "repayments": 0,
       "expectedDividends": 0,
       "dividends": 0,
-      "sharePercent":15
+      "sharePercent": 15
     },
     {
       "id": "6",
@@ -53,7 +53,7 @@
       "repayments": 0,
       "expectedDividends": 0,
       "dividends": 0,
-      "sharePercent":35
+      "sharePercent": 35
     }
   ]
 }
