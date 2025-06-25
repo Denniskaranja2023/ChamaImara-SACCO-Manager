@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       const investmentValue= document.createElement('p')
       investmentValue.textContent=`ksh ${total}`
       investmentValue.style.color="blue"
+      investmentValue.style.textAlign="center"
       investmentValue.id="investmentValue"
       const investmentDiv=document.querySelector('#totalInvestment')
       investmentDiv.appendChild(investmentValue)   
@@ -30,6 +31,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       const debtValue= document.createElement('p')
       debtValue.textContent=`ksh ${total}`
       debtValue.style.color="blue"
+      debtValue.style.textAlign="center"
       debtValue.id="debtValue"
       const debtDiv=document.querySelector('#totalDebt')
       debtDiv.appendChild(debtValue)   
@@ -50,6 +52,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       const actualInterestValue= document.createElement('p')
       actualInterestValue.textContent=`ksh ${total}`
       actualInterestValue.style.color="blue"
+      actualInterestValue.style.textAlign="center"
       actualInterestValue.id="actualInterestValue"
       const actualInterestDiv=document.querySelector('#actualInterests')
       actualInterestDiv.appendChild(actualInterestValue)   
@@ -62,7 +65,28 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   //execute the function totalActualInterests
   totalActualInterests();
-  
+
+  //A function for determining the totalExpectedInterests of the Chama
+  function totalExpectedInterests() {
+    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
+      const total= members.reduce(expectedInterestReducer,0)
+      const expectedInterestValue= document.createElement('p')
+      expectedInterestValue.textContent=`ksh ${total}`
+      expectedInterestValue.style.color="blue"
+      expectedInterestValue.style.textAlign="center"
+      expectedInterestValue.id="expectedInterestValue"
+      const expectedInterestDiv=document.querySelector('#expectedInterests')
+      expectedInterestDiv.appendChild(expectedInterestValue)   
+   }).catch(error=> console.error('There is an error', error))}
+
+  //reducer function for current expected Interests
+  function expectedInterestReducer(accumulator,member){
+     let expectedDividends= member.expectedDividends
+     return accumulator+= expectedDividends
+  }
+  //execute the function totalExpectedInterests
+  totalExpectedInterests();
+
   //A function for determining the netValue of the Chama
   function netValue() {
     fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
@@ -70,6 +94,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       const netTotalValue= document.createElement('p')
       netTotalValue.textContent=`ksh ${total}`
       netTotalValue.style.color="blue"
+      netTotalValue.style.textAlign="center"
       netTotalValue.id="netValue"
       const netValueDiv=document.querySelector('#netValue')
       netValueDiv.appendChild(netTotalValue)   
