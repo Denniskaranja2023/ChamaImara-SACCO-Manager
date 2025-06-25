@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   //1. A function for rendering the total investment of the Chama
    function totalInvestment() {
-    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> {console.log(members); 
+    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
       const total= members.reduce(investmentReducer,0)
       const investmentValue= document.createElement('p')
       investmentValue.textContent=`ksh ${total}`
@@ -311,7 +311,7 @@ function renderDetails(member){
         }).then(res=> {
           if(!res.ok) throw new Error('Could not update currentInvestment');
           return res.json()
-        }).then(()=>{ 
+        }).then((member)=>{ 
           const summaryDiv= document.getElementById("memberSummary")
           summaryDiv.innerHTML=" " //clear summary Div
           renderMembers(); //refresh summary display
@@ -322,6 +322,9 @@ function renderDetails(member){
           netValueDisplay.remove() //removes former netValue
           netValue(); //calls function to update netValue
           newInvestmentForm.reset();
+          const memberDetails= document.getElementById("memberDetails")
+          memberDetails.innerHTML=" "//clears member detail div
+          renderDetails(member);//displays the new investment changes on the details div
         })
       })
     })
@@ -351,7 +354,7 @@ function renderDetails(member){
         }).then(res=> {
           if(!res.ok) throw new Error('Could not update currentDebts');
           return res.json()
-        }).then(()=>{ 
+        }).then((member)=>{ 
           const summaryDiv= document.getElementById("memberSummary")
           summaryDiv.innerHTML=" " //clear summary Div
           renderMembers(); //refresh summary display
@@ -362,6 +365,10 @@ function renderDetails(member){
           netValueDisplay.remove() //removes former netValue
           netValue(); //calls function to update netValue
           amountBorrowedForm.reset();
+          const memberDetails= document.getElementById("memberDetails")
+          memberDetails.innerHTML=" "//clears member detail div
+          renderDetails(member);//displays the new debt changes on the details div
+          
         })
       })
     })
