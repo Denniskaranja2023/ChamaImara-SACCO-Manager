@@ -4,56 +4,61 @@
       "id": "1",
       "name": "James Mwangi",
       "image": "https://img.freepik.com/free-photo/handsome-african-american-man-posing_23-2148634065.jpg?semt=ais_items_boosted&w=740",
-      "currentInvestment": 250000,
+      "currentInvestment": 200000,
       "currentDebts": 0,
       "repayments": 0,
-      "expectedDividends": 0,
       "dividends": 0,
-      "sharePercent": 15
+      "InterestsRepayed": 0,
+      "sharePercent": 18.18,
+      "interestsOnLoan": 5000
     },
     {
       "id": "2",
       "name": "Eric Odhiambo",
       "image": "https://img.freepik.com/free-photo/vertical-shot-attractive-african-american-man-posing-smiling_181624-15027.jpg?semt=ais_items_boosted&w=740",
-      "currentInvestment": 300000,
+      "currentInvestment": 250000,
       "currentDebts": 0,
       "repayments": 0,
-      "expectedDividends": 0,
-      "dividends": 0,
-      "sharePercent": 25
+      "dividends": 1000,
+      "InterestsRepayed": 0,
+      "sharePercent": 22.73,
+      "interestsOnLoan": 0
     },
     {
       "id": "4",
       "name": "Paul Mwashamba",
       "image": "https://img.freepik.com/free-photo/african-american-student-walking-park_1303-12720.jpg?semt=ais_items_boosted&w=740",
-      "currentInvestment": 250000,
+      "currentInvestment": 100000,
       "currentDebts": 0,
       "repayments": 0,
-      "expectedDividends": 0,
       "dividends": 0,
-      "sharePercent": 10
+      "InterestsRepayed": 0,
+      "sharePercent": 9.09,
+      "interestsOnLoan": 0
     },
     {
       "id": "5",
       "name": "Anne Kilonzo",
       "image": "https://img.freepik.com/free-photo/afro-american-woman-model-studio_1303-13585.jpg?semt=ais_items_boosted&w=740",
       "currentInvestment": 200000,
-      "currentDebts": 30000,
+      "currentDebts": 0,
       "repayments": 0,
-      "expectedDividends": 0,
       "dividends": 0,
-      "sharePercent": 15
+      "InterestsRepayed": 1000,
+      "sharePercent": 18.18,
+      "interestsOnLoan": 6750
     },
     {
       "id": "6",
       "name": "Grace Otieno",
       "image": "https://img.freepik.com/free-photo/african-woman-posing-looking-up_23-2148747978.jpg?semt=ais_items_boosted&w=740",
-      "currentInvestment": 480000,
+      "currentInvestment": 350000,
       "currentDebts": 0,
       "repayments": 0,
-      "expectedDividends": 0,
       "dividends": 0,
-      "sharePercent": 35
+      "InterestsRepayed": 0,
+      "sharePercent": 31.82,
+      "interestsOnLoan": 2500
     }
   ]
 }

@@ -1,5 +1,4 @@
 
-
 document.addEventListener('DOMContentLoaded',()=>{ 
   //Functions for the Chama Agrregate values
 
@@ -60,8 +59,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   //reducer function for current Actual Interests
   function actualInterestReducer(accumulator,member){
-     let dividends= member.dividends
-     return accumulator+= dividends
+     let actualInterestsRepayed= member.InterestsRepayed
+     return accumulator+= actualInterestsRepayed
   }
   //execute the function totalActualInterests
   totalActualInterests();
@@ -81,7 +80,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   //reducer function for current expected Interests
   function expectedInterestReducer(accumulator,member){
-     let expectedDividends= member.expectedDividends
+     let expectedDividends= member.dividends
      return accumulator+= expectedDividends
   }
   //execute the function totalExpectedInterests
@@ -102,7 +101,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   //reducer function for current Actual Interests
   function netValueReducer(accumulator,member){
-     let memberNetValue= (member.currentInvestment+member.dividends)-member.currentDebts
+     let memberNetValue= (member.currentInvestment+member.InterestsRepayed)-member.currentDebts
      return accumulator+= memberNetValue
   }
   //execute the netValue function
@@ -114,6 +113,30 @@ document.addEventListener('DOMContentLoaded',()=>{
   function renderMembers() {
      fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> members.forEach(member=>createDisplay(member))).catch(error=>console.error('Could not load:', error))
     }
+  //function to update sharePercent without having to refresh the page
+  function updateAllSharePercentages() {
+  return fetch("http://localhost:3000/members")
+    .then(res => res.json())
+    .then(members => {
+      const totalInvestment = members.reduce((sum, member) => sum + member.currentInvestment, 0);
+
+      const updatePromises = members.map(member => {
+        const newSharePercent = ((member.currentInvestment / totalInvestment) * 100).toFixed(2);
+        return fetch(`http://localhost:3000/members/${member.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            sharePercent: parseFloat(newSharePercent)
+          })
+        });
+      });
+
+      return Promise.all(updatePromises); // Resolves when all fetch requests are done
+    });
+}
+
   //creates display of each member to be rendered on the summary div
   function createDisplay(member) {
    const container= document.createElement('div')
@@ -242,7 +265,7 @@ function renderDetails(member){
             repayment.id= "repayment"
           const repaymentSubmit=document.createElement('input')
             repaymentSubmit.type="submit"
-      const expectedInterests= document.createElement('p')
+      const expectedInterests= document.createElement('div')
      //create a cancel button
      const cancelButton= document.createElement('button')
      cancelButton.textContent="Cancel"
@@ -250,7 +273,9 @@ function renderDetails(member){
      //assign values from member data:
      currentInvestment.innerHTML=`<strong>Current Investment</strong>: ksh${member.currentInvestment}`
      currentDebt.innerHTML=`<strong>Current Debt</strong>: ksh${member.currentDebts}`
-     expectedInterests.innerHTML=`<strong>Total expected interests:</strong>`
+     expectedInterests.innerHTML=`<p><strong>Total LoanInterests:</strong></p>`
+     expectedInterests.id="expectedInterests"
+     expectedInterests.style.display="flex";
      name.textContent= member.name
      image.src=member.image
      investLabel.textContent="New Investment"
@@ -259,6 +284,8 @@ function renderDetails(member){
      debtLabel.htmlFor="borrowed"
      repaymentLabel.textContent="Amount repayed"
      repaymentLabel.htmlFor="repayment"
+     const expectedInterestValue= document.createElement("p")
+     expectedInterestValue.textContent=`ksh${member.interestsOnLoan}`
      //appending the investment elements
       investmentDiv.appendChild(currentInvestment)
       newInvestmentForm.appendChild(investLabel)
@@ -270,6 +297,7 @@ function renderDetails(member){
       amountBorrowedForm.appendChild(debtLabel)
       amountBorrowedForm.appendChild(amountBorrowed)
       amountBorrowedForm.appendChild(amountBorrowedSubmit)
+      expectedInterests.appendChild(expectedInterestValue)
       debtDiv.appendChild(amountBorrowedForm)
     //append the repayment elements
       repaymentForm.appendChild(repaymentLabel)
@@ -312,6 +340,7 @@ function renderDetails(member){
           if(!res.ok) throw new Error('Could not update currentInvestment');
           return res.json()
         }).then((member)=>{ 
+          updateAllSharePercentages().then(()=>{  //updates member share percentages first before any other update
           const summaryDiv= document.getElementById("memberSummary")
           summaryDiv.innerHTML=" " //clear summary Div
           renderMembers(); //refresh summary display
@@ -325,6 +354,7 @@ function renderDetails(member){
           const memberDetails= document.getElementById("memberDetails")
           memberDetails.innerHTML=" "//clears member detail div
           renderDetails(member);//displays the new investment changes on the details div
+        })
         })
       })
     })
@@ -344,13 +374,17 @@ function renderDetails(member){
       const newAmountBorrowed= parseFloat(document.getElementById('borrowed').value)
       fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{
           const newCurrentDebt= (member.currentDebts+ newAmountBorrowed)
+          const newInterestOnLoan=(0.05*newAmountBorrowed)+ member.interestsOnLoan
         // once newAmountBorrowed is calculated, send request to update server
         fetch(`http://localhost:3000/members/${memberId}`, {
            method: "PATCH",
            headers:{
             "Content-Type":"application/json"
            },
-           body: JSON.stringify({currentDebts:newCurrentDebt})
+           body: JSON.stringify({
+            currentDebts:newCurrentDebt,
+            interestsOnLoan:newInterestOnLoan
+           })
         }).then(res=> {
           if(!res.ok) throw new Error('Could not update currentDebts');
           return res.json()
@@ -368,13 +402,68 @@ function renderDetails(member){
           const memberDetails= document.getElementById("memberDetails")
           memberDetails.innerHTML=" "//clears member detail div
           renderDetails(member);//displays the new debt changes on the details div
-          
         })
       })
     })
 
+    //add submit event Listener to repaymentForm
+     repaymentForm.addEventListener('submit',(e)=>{
+      //confirms whether the input value is the desired one
+      const confirmed= confirm('Are you sure member is repaying this amount?')
+      if(!confirmed) {
+        e.preventDefault(); 
+        return;
+      }
+      e.preventDefault();                         //prevent an immediate refresh on submission
+     const container= e.target.closest('.detailView')
+     const memberId=container.id
+     //transforms the inputed value into a decimal number value
+      const repaymentValue= parseFloat(document.getElementById('repayment').value)
+      fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{
+         let newDebtTotal;
+         let newInterestRepayed;
+        if((member.currentDebts-repaymentValue) > 0){
+             newDebtTotal= (member.currentDebts- repaymentValue);
+            }
+          else{
+            newDebtTotal=0
+            newInterestRepayed= repaymentValue-member.currentDebts+member.InterestsRepayed
+          }
+        // once newDebtTotal and newInterestRepayed is calculated, send request to update server
+        fetch(`http://localhost:3000/members/${memberId}`, {
+           method: "PATCH",
+           headers:{
+            "Content-Type":"application/json"
+           },
+           body: JSON.stringify({
+            currentDebts:newDebtTotal,
+            InterestsRepayed: newInterestRepayed || member.InterestsRepayed
+           })
+        }).then(res=> {
+          if(!res.ok) throw new Error('Could not update currentDebts');
+          return res.json()
+        }).then((member)=>{ 
+          const summaryDiv= document.getElementById("memberSummary")
+          summaryDiv.innerHTML=" " //clear summary Div
+          renderMembers(); //refresh summary display
+          const debtDisplay= document.getElementById('debtValue')
+          debtDisplay.remove() //removes former total display
+          totalDebt();  //calls function to update Debt Total
+          const actualinterestDisplay=document.getElementById("actualInterestValue")
+          actualinterestDisplay.remove()//remove former actualInterest display
+          totalActualInterests();
+          const netValueDisplay= document.getElementById('totalNetValue')
+          netValueDisplay.remove() //removes former netValue
+          netValue(); //calls function to update netValue
+          repaymentForm.reset();
+          const memberDetails= document.getElementById("memberDetails")
+          memberDetails.innerHTML=" "//clears member detail div
+          renderDetails(member);//displays the new debt changes on the details div
+        })
+      })
+    })
 
-    //add event LIstner to cancelbutton to remove created container from detail div
+    //add event Listner to cancelbutton to remove created container from detail div
     cancelButton.addEventListener('click', (e)=>{
       const container= e.target.closest('.detailView')
        memberDetails.removeChild(container)
