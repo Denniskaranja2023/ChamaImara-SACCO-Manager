@@ -188,6 +188,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 //execute the render function
 renderMembers();
+
+
 //function to render the details of a member on the details div
 function renderDetails(member){
   const memberDetails= document.querySelector('#memberDetails')
@@ -195,8 +197,6 @@ function renderDetails(member){
       memberDetails.style.flexDirection="column"
       memberDetails.style.justifyContent="space-evenly"
       memberDetails.style.alignItems="center"
-
-
   //Clears any previous entry
       memberDetails.innerHTML=""
   //create elements to render details on member details
@@ -285,6 +285,11 @@ function renderDetails(member){
     mainContainer.appendChild(cancelButton)
     //append the container to the member details div
     memberDetails.appendChild(mainContainer)
+    //add event LIstner to cancelbutton to remove created container from detail div
+    cancelButton.addEventListener('click', (e)=>{
+      const container= e.target.closest('.detailView')
+       memberDetails.removeChild(container)
+    })
     }
 
 })
