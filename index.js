@@ -62,6 +62,28 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   //execute the function totalActualInterests
   totalActualInterests();
+  
+  //A function for determining the netValue of the Chama
+  function netValue() {
+    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
+      const total= members.reduce(netValueReducer,0)
+      const netTotalValue= document.createElement('p')
+      netTotalValue.textContent=`ksh ${total}`
+      netTotalValue.style.color="blue"
+      netTotalValue.id="netValue"
+      const netValueDiv=document.querySelector('#netValue')
+      netValueDiv.appendChild(netTotalValue)   
+   }).catch(error=> console.error('There is an error', error))}
+
+  //reducer function for current Actual Interests
+  function netValueReducer(accumulator,member){
+     let memberNetValue= (member.currentInvestment+member.dividends)-member.currentDebts
+     return accumulator+= memberNetValue
+  }
+  //execute the netValue function
+  netValue();
+
+
 
   //A functiom to render members onto the summary div 
   function renderMembers() {

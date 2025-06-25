@@ -7,7 +7,7 @@
       "currentInvestment": 120000,
       "currentDebts": 0,
       "repayments": 0,
-      "interestsOnLoan": 0,
+      "expectedDividends": 0,
       "dividends": 0
     },
     {
@@ -17,7 +17,7 @@
       "currentInvestment": 95000,
       "currentDebts": 0,
       "repayments": 0,
-      "interestsOnLoan": 0,
+      "expectedDividends": 0,
       "dividends": 0
     },
     {
@@ -27,7 +27,7 @@
       "currentInvestment": 110000,
       "currentDebts": 0,
       "repayments": 0,
-      "interestsOnLoan": 0,
+      "expectedDividends": 0,
       "dividends": 0
     },
     {
@@ -37,7 +37,7 @@
       "currentInvestment": 88000,
       "currentDebts": 0,
       "repayments": 0,
-      "interestsOnLoan": 0,
+      "expectedDividends": 0,
       "dividends": 0
     },
     {
@@ -47,7 +47,7 @@
       "currentInvestment": 130300,
       "currentDebts": 0,
       "repayments": 0,
-      "interestsOnLoan": 0,
+      "expectedDividends": 0,
       "dividends": 0
     }
   ]
