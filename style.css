@@ -24,6 +24,7 @@ body{
 }
 
 #aggregates{
+    text-align: center;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -45,8 +46,8 @@ body{
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    justify-content: flex-start;
-    gap:30px;
+    justify-content:center;
+    gap:40px;
     width: fit-content;
     background-color: rgba(224, 224, 228, 0.151);
 }

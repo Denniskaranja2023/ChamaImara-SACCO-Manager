@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded',()=>{ 
   //Functions for the Chama Agrregate values
 
-  //A function for rendering the total investment of the Chama
+  //1. A function for rendering the total investment of the Chama
    function totalInvestment() {
     fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> {console.log(members); 
       const total= members.reduce(investmentReducer,0)
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   //execute the totalinvestment function
   totalInvestment();
 
-  //A function for rendering the total Debt of the Chama
+  //2. A function for rendering the total Debt of the Chama
   function totalDebt() {
     fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
       const total= members.reduce(debtReducer,0)
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   //execute the total Debt function
   totalDebt();
 
-  //A function for rendering the total actual Interests of the chama
+  //3.A function for rendering the total actual Interests of the chama
   function totalActualInterests() {
     fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
       const total= members.reduce(actualInterestReducer,0)
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   //execute the function totalActualInterests
   totalActualInterests();
 
-  //A function for determining the totalExpectedInterests of the Chama
+  //4. A function for determining the totalExpectedInterests of the Chama
   function totalExpectedInterests() {
     fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
       const total= members.reduce(expectedInterestReducer,0)
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   //execute the function totalExpectedInterests
   totalExpectedInterests();
 
-  //A function for determining the netValue of the Chama
+  //5. A function for determining the netValue of the Chama
   function netValue() {
     fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
       const total= members.reduce(netValueReducer,0)
@@ -135,7 +135,8 @@ document.addEventListener('DOMContentLoaded',()=>{
    deleteButton.id="remover"
    const editButton=document.createElement('button')
    editButton.id="editer"
-   //const share=document.createElement('p #share')
+   const share=document.createElement('p')
+   share.id="share"
    //styles for the elements
    h4.style.textAlign= "center";
    h4.style.marginBottom= '2%';
@@ -151,6 +152,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    investment.innerHTML= `<strong>Current Investment</strong>:ksh ${member.currentInvestment}`
    debt.innerHTML=`<strong>Current Debt</strong>:ksh ${member.currentDebts}`
    dividends.innerHTML=`<strong>Dividends</strong>:ksh ${member.dividends}`
+   share.innerHTML=`<strong>Share value</strong>:${member.sharePercent}%`
    deleteButton.innerHTML=`Remove <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>`
    editButton.innerHTML=`Edit <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>`
    //share.textContent=
@@ -162,6 +164,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    container.appendChild(investment);
    container.appendChild(debt);
    container.appendChild(dividends);
+   container.appendChild(share);
    container.appendChild(buttonDiv);
 
    //append container to the member detail div
