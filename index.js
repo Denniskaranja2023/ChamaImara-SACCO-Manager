@@ -1,12 +1,73 @@
 
 
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',()=>{ 
+  //Functions for the Chama Agrregate values
+
+  //A function for rendering the total investment of the Chama
+   function totalInvestment() {
+    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> {console.log(members); 
+      const total= members.reduce(investmentReducer,0)
+      const investmentValue= document.createElement('p')
+      investmentValue.textContent=`ksh ${total}`
+      investmentValue.style.color="blue"
+      investmentValue.id="investmentValue"
+      const investmentDiv=document.querySelector('#totalInvestment')
+      investmentDiv.appendChild(investmentValue)   
+   }).catch(error=> console.error('There is an error', error))}
+
+  //reducer function for current Investments
+  function investmentReducer(accumulator,member){
+     let currentInvestment= member.currentInvestment
+     return accumulator+= currentInvestment
+  }
+  //execute the totalinvestment function
+  totalInvestment();
+
+  //A function for rendering the total Debt of the Chama
+  function totalDebt() {
+    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
+      const total= members.reduce(debtReducer,0)
+      const debtValue= document.createElement('p')
+      debtValue.textContent=`ksh ${total}`
+      debtValue.style.color="blue"
+      debtValue.id="debtValue"
+      const debtDiv=document.querySelector('#totalDebt')
+      debtDiv.appendChild(debtValue)   
+   }).catch(error=> console.error('There is an error', error))}
+
+  //reducer function for current Debts
+  function debtReducer(accumulator,member){
+     let currentDebt= member.currentDebts
+     return accumulator+= currentDebt
+  }
+  //execute the total Debt function
+  totalDebt();
+
+  //A function for rendering the total actual Interests of the chama
+  function totalActualInterests() {
+    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
+      const total= members.reduce(actualInterestReducer,0)
+      const actualInterestValue= document.createElement('p')
+      actualInterestValue.textContent=`ksh ${total}`
+      actualInterestValue.style.color="blue"
+      actualInterestValue.id="actualInterestValue"
+      const actualInterestDiv=document.querySelector('#actualInterests')
+      actualInterestDiv.appendChild(actualInterestValue)   
+   }).catch(error=> console.error('There is an error', error))}
+
+  //reducer function for current Actual Interests
+  function actualInterestReducer(accumulator,member){
+     let dividends= member.dividends
+     return accumulator+= dividends
+  }
+  //execute the function totalActualInterests
+  totalActualInterests();
+
   //A functiom to render members onto the summary div 
   function renderMembers() {
      fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> members.forEach(member=>createDisplay(member))).catch(error=>console.error('Could not load:', error))
     }
-    renderMembers();
-  
+  //creates display of each member to be rendered on the summary div
   function createDisplay(member) {
    const container= document.createElement('div')
    //styles of container
@@ -75,14 +136,23 @@ document.addEventListener('DOMContentLoaded',()=>{
     fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{renderDetails(member)})
   })
   }
-
+//execute the render function
+renderMembers();
 //function to render the details of a member on the details div
 function renderDetails(member){
   const memberDetails= document.querySelector('#memberDetails')
-      memberDetails.style.display= "block"
+      memberDetails.style.display= "flex"
+      memberDetails.style.flexDirection="column"
+      memberDetails.style.justifyContent="space-evenly"
+      memberDetails.style.alignItems="center"
+
+
+  //Clears any previous entry
+      memberDetails.innerHTML=""
   //create elements to render details on member details
       const mainContainer= document.createElement("div")
       mainContainer.id= member.id
+      mainContainer.className="detailView"
       const name= document.createElement('h3')
       const image= document.createElement('img')
       image.style.height="200px";
@@ -93,53 +163,66 @@ function renderDetails(member){
         const currentInvestment=document.createElement('p')
         const newInvestmentForm= document.createElement('form')
           const newInvestment=document.createElement('input')
+          const investLabel= document.createElement("label")
             newInvestment.type="number"
             newInvestment.name="investment"
             newInvestment.placeholder="10000"
-            newInvestment.label="New Investment"
+            newInvestment.id="investment"
           const newInvestmentSubmit=document.createElement('input')
             newInvestmentSubmit.type="submit"
       //create the elements for debt div
       const debtDiv= document.createElement('div')
         const currentDebt=document.createElement('p')
         const amountBorrowedForm= document.createElement('form')
+        const debtLabel=document.createElement('label')
           const amountBorrowed=document.createElement('input')
             amountBorrowed.type="number"
             amountBorrowed.name="borrowed"
             amountBorrowed.placeholder="10000"
-            amountBorrowed.label= "Amount Borrowed"
+            amountBorrowed.id="borrowed"
           const amountBorrowedSubmit=document.createElement('input')
             amountBorrowedSubmit.type="submit"
       //create the elements for repayment form
       const repaymentForm= document.createElement('form')
           const repayment=document.createElement('input')
+          const repaymentLabel=document.createElement('label')
             repayment.type="number"
             repayment.name="repayment"
             repayment.placeholder="10000"
-            repayment.labels= "Amount repayed"
+            repayment.id= "repayment"
           const repaymentSubmit=document.createElement('input')
             repaymentSubmit.type="submit"
       const expectedInterests= document.createElement('p')
      //create a cancel button
      const cancelButton= document.createElement('button')
      cancelButton.textContent="Cancel"
+     cancelButton.className="buttons"
      //assign values from member data:
      currentInvestment.innerHTML=`<strong>Current Investment</strong>: ksh${member.currentInvestment}`
      currentDebt.innerHTML=`<strong>Current Debt</strong>: ksh${member.currentDebts}`
      expectedInterests.innerHTML=`<strong>Total expected interests:</strong>`
      name.textContent= member.name
      image.src=member.image
+     investLabel.textContent="New Investment"
+     investLabel.htmlFor="investment"
+     debtLabel.textContent="Amount Borrowed"
+     debtLabel.htmlFor="borrowed"
+     repaymentLabel.textContent="Amount repayed"
+     repaymentLabel.htmlFor="repayment"
      //appending the investment elements
       investmentDiv.appendChild(currentInvestment)
+      newInvestmentForm.appendChild(investLabel)
       newInvestmentForm.appendChild(newInvestment)
       newInvestmentForm.appendChild(newInvestmentSubmit)
       investmentDiv.appendChild(newInvestmentForm)
      //append the debt elements
       debtDiv.appendChild(currentDebt)
+      amountBorrowedForm.appendChild(debtLabel)
       amountBorrowedForm.appendChild(amountBorrowed)
       amountBorrowedForm.appendChild(amountBorrowedSubmit)
       debtDiv.appendChild(amountBorrowedForm)
     //append the repayment elements
+      repaymentForm.appendChild(repaymentLabel)
       repaymentForm.appendChild(repayment)
       repaymentForm.appendChild(repaymentSubmit)
     //append all major divs to container

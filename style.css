@@ -60,7 +60,7 @@ body{
    flex-wrap: wrap;
    justify-content: space-evenly;
    background-color:aliceblue;
-   height: fit-content;
+   height:auto;
    width: 90%;
    margin-left: 5%;
    margin-top: 2%;
@@ -140,4 +140,11 @@ label{
 }
 .buttons:hover{
     background-color: rgba(0, 0, 255, 0.507);
+}
+.detailView{
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+    align-items:baseline;
 }
