@@ -10,7 +10,9 @@ ChamaImara is an elaborate financial manager for small and mid-sized investment 
 ## Screenshots
 
 ![Aggregate-SummarySection](./img/aggregateSummary%20section.png)
+
 ![Detail-section](./img/detail%20section.png)
+
 ![NewMember-StatisticSection](./img/addNew%20Section.png)
 
 ## Features
