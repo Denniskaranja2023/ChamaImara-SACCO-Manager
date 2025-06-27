@@ -1,10 +1,10 @@
 
 document.addEventListener('DOMContentLoaded',()=>{ 
   //Functions for the Chama Agrregate values
-
+  const baseURL= "http://localhost:3000/members"
   //1. A function for rendering the total investment of the Chama
    function totalInvestment() {
-    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
+    fetch(`${baseURL}`).then(res=>res.json()).then(members=> { 
       const total= members.reduce(investmentReducer,0)
       const investmentValue= document.createElement('p')
       investmentValue.textContent=`ksh ${total}`
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   //2. A function for rendering the total Debt of the Chama
   function totalDebt() {
-    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
+    fetch(`${baseURL}`).then(res=>res.json()).then(members=> { 
       const total= members.reduce(debtReducer,0)
       const debtValue= document.createElement('p')
       debtValue.textContent=`ksh ${total}`
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   //3.A function for rendering the total actual Interests of the chama
   function totalActualInterests() {
-    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
+    fetch(`${baseURL}`).then(res=>res.json()).then(members=> { 
       const total= members.reduce(actualInterestReducer,0)
       const actualInterestValue= document.createElement('p')
       actualInterestValue.textContent=`ksh ${total}`
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   
   //4. A function for determining the totalExpectedInterests of the Chama
   function totalExpectedInterests() {
-    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
+    fetch(`${baseURL}`).then(res=>res.json()).then(members=> { 
       const total= members.reduce(expectedInterestReducer,0)
       const expectedInterestValue= document.createElement('p')
       expectedInterestValue.textContent=`ksh ${total}`
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   //5. A function for determining the netValue of the Chama
   function netValue() {
-    fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> { 
+    fetch(`${baseURL}`).then(res=>res.json()).then(members=> { 
       const total= members.reduce(netValueReducer,0)
       const netTotalValue= document.createElement('p')
       netTotalValue.textContent=`ksh ${total}`
@@ -111,18 +111,18 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   //A functiom to render members onto the summary div 
   function renderMembers() {
-     fetch("http://localhost:3000/members").then(res=>res.json()).then(members=> members.forEach(member=>createDisplay(member))).catch(error=>console.error('Could not load:', error))
+     fetch(`${baseURL}`).then(res=>res.json()).then(members=> members.forEach(member=>createDisplay(member))).catch(error=>console.error('Could not load:', error))
     }
   //function to update sharePercent without having to refresh the page
   function updateAllSharePercentages() {
-  return fetch("http://localhost:3000/members")
+  return fetch(`${baseURL}`)
     .then(res => res.json())
     .then(members => {
       const totalInvestment = members.reduce((sum, member) => sum + member.currentInvestment, 0);
 
       const updatePromises = members.map(member => {
         const newSharePercent = ((member.currentInvestment / totalInvestment) * 100);
-        return fetch(`http://localhost:3000/members/${member.id}`, {
+        return fetch(`${baseURL}/${member.id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json"
@@ -202,14 +202,15 @@ deleteButton.addEventListener('click', async (e) => {
   if (!confirmDelete) return;
 
   //Fetch the member's data before deletion
-  const memberRes = await fetch(`http://localhost:3000/members/${memberId}`);
+  const memberRes = await fetch(`${baseURL}/${memberId}`);
   const memberToDelete = await memberRes.json();
   //select the currentDebt and interestOnLoan of the member to be deleted and assign them variables
   const interestOnLoan = memberToDelete.interestsOnLoan
   const currentDebt = memberToDelete.currentDebts
+  const deletedDividends= memberToDelete.dividends
 
   //Get all members and filter out the one being deleted
-  const allMembersRes = await fetch(`http://localhost:3000/members`);
+  const allMembersRes = await fetch(`${baseURL}`);
   const allMembers = await allMembersRes.json();
   const remainingMembers = allMembers.filter(member => member.id !== memberId);
 
@@ -218,15 +219,15 @@ deleteButton.addEventListener('click', async (e) => {
     return accumulator + (parseFloat(member.sharePercent));
   }, 0);
 
-  // Redistribute exiting member's currentDebt as investment for remaining members and interestOnLoan as Interestrepayments on each member
+  // Redistribute exiting member's currentDebt as investment for remaining members and interestOnLoan as Interestrepayments on each member and removes all dividends of deleted member
   for (const member of remainingMembers) {
     const sharePercent = parseFloat(member.sharePercent);
     const shareRatio = sharePercent / totalShare;
 
-    const updatedInterest = (parseFloat(member.InterestsRepayed)) + (interestOnLoan * shareRatio);
+    const updatedInterest = (parseFloat(member.InterestsRepayed)) + (interestOnLoan * shareRatio)-(deletedDividends*shareRatio);
     const updatedInvestment = (parseFloat(member.currentInvestment)) + (currentDebt * shareRatio);
 
-    await fetch(`http://localhost:3000/members/${member.id}`, {
+    await fetch(`${baseURL}/${member.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -237,7 +238,7 @@ deleteButton.addEventListener('click', async (e) => {
   }
 
   //Delete the member from server
-  await fetch(`http://localhost:3000/members/${memberId}`, { method: 'DELETE' });
+  await fetch(`${baseURL}/${memberId}`, { method: 'DELETE' });
 
   //Remove member's container from DOM
   containerDiv.remove();
@@ -263,13 +264,14 @@ deleteButton.addEventListener('click', async (e) => {
   document.getElementById("memberDetails").innerHTML="";
   document.getElementById("memberSummary").innerHTML="";
   renderMembers();
+  renderSharePieChart();
 });
 
   //add an eventListener to edit a member's details
   editButton.addEventListener("click",(e)=>{
     const targetDiv= e.target.closest('.container')
     const memberId= targetDiv.id
-    fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{renderDetails(member)})
+    fetch(`${baseURL}/${memberId}`).then(res=>res.json()).then(member=>{renderDetails(member)})
   })
   }
 //execute the render function after updating percentages
@@ -389,10 +391,10 @@ function renderDetails(member){
      const memberId=container.id
      //transforms the inputed value into a decimal number value
       const newInvestment= parseFloat(document.getElementById('investment').value)
-      fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{
+      fetch(`${baseURL}/${memberId}`).then(res=>res.json()).then(member=>{
           const newCurrentInvestment= (member.currentInvestment+ newInvestment)
         // once newcurrent investment is calculated, send request to update server
-        fetch(`http://localhost:3000/members/${memberId}`, {
+        fetch(`${baseURL}/${memberId}`, {
            method: "PATCH",
            headers:{
             "Content-Type":"application/json"
@@ -406,6 +408,7 @@ function renderDetails(member){
           const summaryDiv= document.getElementById("memberSummary")
           summaryDiv.innerHTML=" " //clear summary Div
           renderMembers(); //refresh summary display
+          renderSharePieChart();
           const investDisplay= document.getElementById('investmentValue')
           investDisplay.remove() //removes former total display
           totalInvestment();  //calls function to update newinvestment Total
@@ -434,7 +437,7 @@ function renderDetails(member){
      const memberId=container.id
      //transforms the inputed value into a decimal number value
       const newAmountBorrowed= parseInt(document.getElementById('borrowed').value)
-      fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{
+      fetch(`${baseURL}/${memberId}`).then(res=>res.json()).then(member=>{
         //terminates if member has an outstanding debt
         if(member.currentDebts !==0) {
           alert("Member must first clear outstanding debt")
@@ -447,7 +450,7 @@ function renderDetails(member){
           const newInterestOnLoan=(0.05*newAmountBorrowed)+ member.interestsOnLoan
           const newCurrentDebt= (member.currentDebts+ newAmountBorrowed+(0.05*newAmountBorrowed))
         // once newAmountBorrowed is calculated, send request to update server
-        fetch(`http://localhost:3000/members/${memberId}`, {
+        fetch(`${baseURL}/${memberId}`, {
            method: "PATCH",
            headers:{
             "Content-Type":"application/json"
@@ -460,14 +463,14 @@ function renderDetails(member){
           if(!res.ok) throw new Error('Could not update currentDebts');
           return res.json()
         }).then (()=>{
-          fetch("http://localhost:3000/members").then(res=>res.json()).then(members=>{
+          fetch(`${baseURL}`).then(res=>res.json()).then(members=>{
              //const totalInvestment= members.reduce(investmentReducer,0)
               
              const updateAllPromises= members.map(updatedMember=>{
               const shareOnInterest= ((0.05*newAmountBorrowed)*(updatedMember.sharePercent/100))
               const newDividend= (updatedMember.dividends+ shareOnInterest)
 
-              return fetch(`http://localhost:3000/members/${updatedMember.id}`,{
+              return fetch(`${baseURL}/${updatedMember.id}`,{
                 method:"PATCH",
                 headers: {
                   "Content-Type":"application/json"
@@ -483,7 +486,7 @@ function renderDetails(member){
            }).then (()=>{
           const memberDetails= document.getElementById("memberDetails")
           memberDetails.innerHTML=" "//clears member detail div
-          fetch(`http://localhost:3000/members/${memberId}`)
+          fetch(`${baseURL}/${memberId}`)
                .then(res => res.json())
                .then(updatedMember => {
                 renderDetails(updatedMember);
@@ -520,7 +523,7 @@ function renderDetails(member){
      const memberId=container.id
      //transforms the inputed value into a decimal number value
       const repaymentValue= parseFloat(document.getElementById('repayment').value)
-      fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{
+      fetch(`${baseURL}/${memberId}`).then(res=>res.json()).then(member=>{
          let newDebtTotal;
          let newInterestRepayed;
         if((member.currentDebts-repaymentValue) > 0){
@@ -531,7 +534,7 @@ function renderDetails(member){
             newInterestRepayed= repaymentValue-member.currentDebts+member.interestsOnLoan;
           }
         // once newDebtTotal and newInterestRepayed is calculated, send request to update server
-        fetch(`http://localhost:3000/members/${memberId}`, {
+        fetch(`${baseURL}/${memberId}`, {
            method: "PATCH",
            headers:{
             "Content-Type":"application/json"
@@ -580,7 +583,7 @@ function renderDetails(member){
        const newMemberImage=newMemberForm.image.value
        const newMemberInvestment=newMemberForm.currentInvestment.value
       //send a post request with the new member data
-      fetch("http://localhost:3000/members",{
+      fetch(`${baseURL}`,{
          method:"POST",
          headers: {"Content-Type":"application/json"},
          body: JSON.stringify({
@@ -624,7 +627,7 @@ function generateColors(count, alpha = 0.7) {
 async function renderSharePieChart() {
   await updateAllSharePercentages();
   //fetch members from server
-  const res = await fetch('http://localhost:3000/members');
+  const res = await fetch(`${baseURL}`);
   const members = await res.json();
   //sets labels as member names and data as percentages
   const labels = members.map(member => member.name);
@@ -656,7 +659,7 @@ async function renderSharePieChart() {
           position: 'left'},
         title: {
           display: true,
-          text: 'Member Share Percentages'}
+          text: 'MemberShare Percentages'}
       }
     }
   });
