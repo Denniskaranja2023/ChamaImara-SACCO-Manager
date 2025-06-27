@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   //reducer function for current Actual Interests
   function netValueReducer(accumulator,member){
-     let memberNetValue= (member.currentInvestment+member.InterestsRepayed)-member.currentDebts
+     let memberNetValue= (member.currentInvestment-member.currentDebts+member.InterestsRepayed)
      return accumulator+= memberNetValue
   }
   //execute the netValue function
@@ -121,14 +121,14 @@ document.addEventListener('DOMContentLoaded',()=>{
       const totalInvestment = members.reduce((sum, member) => sum + member.currentInvestment, 0);
 
       const updatePromises = members.map(member => {
-        const newSharePercent = ((member.currentInvestment / totalInvestment) * 100).toFixed(2);
+        const newSharePercent = ((member.currentInvestment / totalInvestment) * 100);
         return fetch(`http://localhost:3000/members/${member.id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            sharePercent: parseFloat(newSharePercent)
+            sharePercent: parseFloat(newSharePercent.toFixed(2))
           })
         });
       });
@@ -194,14 +194,136 @@ document.addEventListener('DOMContentLoaded',()=>{
    const memberSummary= document.getElementById('memberSummary')
    memberSummary.appendChild(container)
    //add an eventListener to remove a member
-   deleteButton.addEventListener('click', (e)=> {
-     const containerDiv= e.target.closest(".container")
-     const memberId= containerDiv.id;
-     const confirmDelete =confirm("Do you want to remove member?")
-     if(!confirmDelete) return;
-     fetch(`http://localhost:3000/members/${memberId}`, {method:'DELETE'}).then(res=> {if (!res.ok) throw new Error("Delete failed");
-      containerDiv.remove();}).catch(error=>console.error("Error:",error))
-   })
+//    deleteButton.addEventListener('click', async (e)=> {
+//      const containerDiv= e.target.closest(".container")
+//      const memberId= containerDiv.id;
+//      const confirmDelete =confirm("Do you want to remove member?")
+//      if(!confirmDelete) return;
+//     // Redistribute all exiting member current debts as investments for the remaining members as per new share value. Also redistribute the interests on Loan to the other members interestsOnLoan as per new share value
+//      // Get member data before deleting
+//         const memberRes = await fetch(`http://localhost:3000/members/${memberId}`);
+//         const memberToDelete = await memberRes.json();
+//         const interestOnLoan = memberToDelete.interestOnLoan;
+//         const currentDebt = memberToDelete.currentDebt;
+
+//         // Get all members to recalculate
+//         const allMembersRes = await fetch(`http://localhost:3000/members`);
+//         const allMembers = await allMembersRes.json();
+
+//         // Filter remaining members (excluding the one to delete)
+//         const remainingMembers = allMembers.filter(eachmember => eachmember.id !== memberId);
+
+//         // Calculate total share percent for remaining members
+//         const totalShare = remainingMembers.reduce((sum,memberRemaining) => sum + memberRemaining.sharePercent, 0);
+
+//         // Redistribute interestOnLoan and currentDebt
+//         for (const member of remainingMembers) {
+//             const shareRatio = member.sharePercent / totalShare;
+//             const updatedInterest = member.interestOnLoan + (interestOnLoan * shareRatio);
+//             const updatedInvestment = member.currentInvestment + (currentDebt * shareRatio);
+
+//             // Update each member
+//             await fetch(`http://localhost:3000/members/${member.id}`, {
+//                 method: 'PATCH',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({
+//                     interestOnLoan: Math.round(updatedInterest),
+//                     currentInvestment: Math.round(updatedInvestment)
+//                 })
+//               }
+//         )}
+//          function refresh() {
+//         ["investmentValue", "debtValue", "actualInterestValue", "expectedInterestValue", "totalNetValue"]
+//        .forEach(id => document.getElementById(id)?.remove());
+//        totalInvestment();
+//        totalDebt();
+//        totalActualInterests();
+//        totalExpectedInterests();
+//        netValue();
+//      }
+    
+
+//  refresh();
+        
+//      //Delete the member
+//      await fetch(`http://localhost:3000/members/${memberId}`, {method:'DELETE'});
+//       containerDiv.remove();
+//       //make the necessary adjustments once a member is removed
+//       await updateAllSharePercentages();
+//       document.getElementById("memberSummary").innerHTML = "";
+//       renderMembers();
+//   })
+deleteButton.addEventListener('click', async (e) => {
+  const containerDiv = e.target.closest(".container");
+  const memberId = containerDiv.id 
+
+  const confirmDelete = confirm("Do you want to remove member?");
+  if (!confirmDelete) return;
+
+  //Fetch the member's data before deletion
+  const memberRes = await fetch(`http://localhost:3000/members/${memberId}`);
+  const memberToDelete = await memberRes.json();
+  //select the currentDebt and interestOnLoan of the member to be deleted and assign them variables
+  const interestOnLoan = memberToDelete.interestsOnLoan
+  const currentDebt = memberToDelete.currentDebts
+
+  //Get all members and filter out the one being deleted
+  const allMembersRes = await fetch(`http://localhost:3000/members`);
+  const allMembers = await allMembersRes.json();
+  const remainingMembers = allMembers.filter(member => member.id !== memberId);
+
+  //Calculate total share percent of remaining members
+  const totalShare = remainingMembers.reduce((accumulator, member) => {
+    return accumulator + (parseFloat(member.sharePercent));
+  }, 0);
+
+  // Redistribute exiting member's currentDebt as investment for remaining members and interestOnLoan as Interestrepayments on each member
+  for (const member of remainingMembers) {
+    const sharePercent = parseFloat(member.sharePercent);
+    const shareRatio = sharePercent / totalShare;
+
+    const updatedInterest = (parseFloat(member.InterestsRepayed)) + (interestOnLoan * shareRatio);
+    const updatedInvestment = (parseFloat(member.currentInvestment)) + (currentDebt * shareRatio);
+
+    await fetch(`http://localhost:3000/members/${member.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        currentInvestment: Math.round(updatedInvestment),
+        InterestsRepayed: Math.round(updatedInterest)
+      })
+    });
+  }
+
+  //Delete the member from server
+  await fetch(`http://localhost:3000/members/${memberId}`, { method: 'DELETE' });
+
+  //Remove member's container from DOM
+  containerDiv.remove();
+
+  // Update share percentages after deletion
+  await updateAllSharePercentages();
+
+  // Refresh summaries and member list
+  function refresh() {
+    // Clear all summary value containers
+    ["investmentValue", "debtValue", "actualInterestValue", "expectedInterestValue", "totalNetValue"]
+      .forEach(id => document.getElementById(id)?.remove());
+
+    // Re-render values
+    totalInvestment();
+    totalDebt();
+    totalActualInterests();
+    totalExpectedInterests();
+    netValue();
+  }
+
+  refresh();
+  document.getElementById("memberDetails").innerHTML="";
+  document.getElementById("memberSummary").innerHTML="";
+  renderMembers();
+});
+
   //add an eventListener to edit a member's details
   editButton.addEventListener("click",(e)=>{
     const targetDiv= e.target.closest('.container')
@@ -209,9 +331,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{renderDetails(member)})
   })
   }
-//execute the render function
-renderMembers();
-
+//execute the render function after updating percentages
+updateAllSharePercentages().then(() => {
+  renderMembers();
+});
 
 //function to render the details of a member on the details div
 function renderDetails(member){
@@ -231,6 +354,7 @@ function renderDetails(member){
       image.style.height="200px";
       image.style.width="200px";
       image.style.borderRadius="50%";
+      image.style.border="1px solid black";
       //create elements for investment div
       const investmentDiv= document.createElement('div')
         const currentInvestment=document.createElement('p')
@@ -371,10 +495,19 @@ function renderDetails(member){
      const container= e.target.closest('.detailView')
      const memberId=container.id
      //transforms the inputed value into a decimal number value
-      const newAmountBorrowed= parseFloat(document.getElementById('borrowed').value)
+      const newAmountBorrowed= parseInt(document.getElementById('borrowed').value)
       fetch(`http://localhost:3000/members/${memberId}`).then(res=>res.json()).then(member=>{
-          const newCurrentDebt= (member.currentDebts+ newAmountBorrowed)
+        //terminates if member has an outstanding debt
+        if(member.currentDebts !==0) {
+          alert("Member must first clear outstanding debt")
+          return;}
+        //terminates if member borrows more than half their investments
+        else if(newAmountBorrowed> 0.4*member.currentInvestment){
+          alert("Member cannot borrow more than 40% of their savings")
+          return;
+        }
           const newInterestOnLoan=(0.05*newAmountBorrowed)+ member.interestsOnLoan
+          const newCurrentDebt= (member.currentDebts+ newAmountBorrowed+(0.05*newAmountBorrowed))
         // once newAmountBorrowed is calculated, send request to update server
         fetch(`http://localhost:3000/members/${memberId}`, {
            method: "PATCH",
@@ -382,16 +515,48 @@ function renderDetails(member){
             "Content-Type":"application/json"
            },
            body: JSON.stringify({
-            currentDebts:newCurrentDebt,
-            interestsOnLoan:newInterestOnLoan
+            currentDebts: newCurrentDebt,
+            interestsOnLoan: newInterestOnLoan
            })
         }).then(res=> {
           if(!res.ok) throw new Error('Could not update currentDebts');
           return res.json()
-        }).then((member)=>{ 
+        }).then (()=>{
+          fetch("http://localhost:3000/members").then(res=>res.json()).then(members=>{
+             //const totalInvestment= members.reduce(investmentReducer,0)
+              
+             const updateAllPromises= members.map(updatedMember=>{
+              const shareOnInterest= ((0.05*newAmountBorrowed)*(updatedMember.sharePercent/100))
+              const newDividend= (updatedMember.dividends+ shareOnInterest)
+
+              return fetch(`http://localhost:3000/members/${updatedMember.id}`,{
+                method:"PATCH",
+                headers: {
+                  "Content-Type":"application/json"
+                },
+                body: JSON.stringify({
+                  dividends: Math.round(newDividend)
+                })
+              });
+             });
+         
+          //Ensure all dividends values are updated before any other execution continues
+          return Promise.all(updateAllPromises) 
+           }).then (()=>{
+          const memberDetails= document.getElementById("memberDetails")
+          memberDetails.innerHTML=" "//clears member detail div
+          fetch(`http://localhost:3000/members/${memberId}`)
+               .then(res => res.json())
+               .then(updatedMember => {
+                renderDetails(updatedMember);
+               })//displays the new debt changes on the details div
+          
           const summaryDiv= document.getElementById("memberSummary")
           summaryDiv.innerHTML=" " //clear summary Div
           renderMembers(); //refresh summary display
+          const expectedInterestsDisplay= document.getElementById('expectedInterestValue')
+          expectedInterestsDisplay.remove() //removes former expectedInterest
+          totalExpectedInterests(); //calls function to update expectedInterest
           const debtDisplay= document.getElementById('debtValue')
           debtDisplay.remove() //removes former total display
           totalDebt();  //calls function to update Debt Total
@@ -399,12 +564,10 @@ function renderDetails(member){
           netValueDisplay.remove() //removes former netValue
           netValue(); //calls function to update netValue
           amountBorrowedForm.reset();
-          const memberDetails= document.getElementById("memberDetails")
-          memberDetails.innerHTML=" "//clears member detail div
-          renderDetails(member);//displays the new debt changes on the details div
         })
       })
     })
+     })
 
     //add submit event Listener to repaymentForm
      repaymentForm.addEventListener('submit',(e)=>{
@@ -427,7 +590,7 @@ function renderDetails(member){
             }
           else{
             newDebtTotal=0
-            newInterestRepayed= repaymentValue-member.currentDebts+member.InterestsRepayed
+            newInterestRepayed= repaymentValue-member.currentDebts+member.interestsOnLoan;
           }
         // once newDebtTotal and newInterestRepayed is calculated, send request to update server
         fetch(`http://localhost:3000/members/${memberId}`, {
@@ -437,7 +600,7 @@ function renderDetails(member){
            },
            body: JSON.stringify({
             currentDebts:newDebtTotal,
-            InterestsRepayed: newInterestRepayed || member.InterestsRepayed
+            InterestsRepayed: newInterestRepayed || member.InterestsRepayed,
            })
         }).then(res=> {
           if(!res.ok) throw new Error('Could not update currentDebts');
@@ -462,12 +625,50 @@ function renderDetails(member){
         })
       })
     })
-
     //add event Listner to cancelbutton to remove created container from detail div
     cancelButton.addEventListener('click', (e)=>{
       const container= e.target.closest('.detailView')
        memberDetails.removeChild(container)
     })
     }
+    //add Submit event listener to the add new member form
+    const newMemberForm= document.querySelector("#newMemberForm")
+    newMemberForm.addEventListener('submit',e => {
+      e.preventDefault(); //prevents immediate submission of form
+      const confirmMessage= confirm("Is this the correct member Data?")
+      if(!confirmMessage) return;
+      ///select the form inputs data
+       const newMemberName= newMemberForm.memberName.value
+       const newMemberImage=newMemberForm.image.value
+       const newMemberInvestment=newMemberForm.currentInvestment.value
+      //send a post request with the new member data
+      fetch("http://localhost:3000/members",{
+         method:"POST",
+         headers: {"Content-Type":"application/json"},
+         body: JSON.stringify({
+             name: newMemberName,
+             image: newMemberImage,
+             currentInvestment: parseInt(newMemberInvestment),
+             currentDebts: 0,
+             repayments: 0,
+             dividends: 0,
+             InterestsRepayed: 0,
+             interestsOnLoan: 0
+         })
+      }).then(res=>res.json()).then(()=>
+        //update all the parts of the DOM affected by a new investment
+         updateAllSharePercentages().then(()=>{
+          const summaryDiv= document.getElementById("memberSummary")
+          summaryDiv.innerHTML=" " //clear summary Div
+          renderMembers();
+          const investDisplay= document.getElementById('investmentValue')
+          investDisplay.remove() //removes former total display
+          totalInvestment();  //calls function to update newinvestment Total
+          const netValueDisplay= document.getElementById('totalNetValue')
+          netValueDisplay.remove() //removes former netValue
+          netValue(); //calls function to update netValue
+         }
+        ))
+    })
 
 })
