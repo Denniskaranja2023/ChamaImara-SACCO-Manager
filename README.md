@@ -10,9 +10,7 @@ ChamaImara is an elaborate financial manager for small and mid-sized investment 
 ## Screenshots
 
 ![Aggregate-SummarySection](./img/aggregateSummary%20section.png)
-
 ![Detail-section](./img/detail%20section.png)
-
 ![NewMember-StatisticSection](./img/addNew%20Section.png)
 
 ## Features
@@ -38,7 +36,7 @@ To use this application, you will need a computer, tablet or phone and access to
 
 ### View Live site
 
-You may access the live site of this application [here]()
+You may access the live site of this application [here](https://denniskaranja2023.github.io/ChamaImara-SACCO-Manager/)
 ## Installation process
 
 1. Clone this repository using
