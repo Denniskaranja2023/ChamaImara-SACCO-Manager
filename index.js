@@ -193,66 +193,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    //append container to the member detail div
    const memberSummary= document.getElementById('memberSummary')
    memberSummary.appendChild(container)
-   //add an eventListener to remove a member
-//    deleteButton.addEventListener('click', async (e)=> {
-//      const containerDiv= e.target.closest(".container")
-//      const memberId= containerDiv.id;
-//      const confirmDelete =confirm("Do you want to remove member?")
-//      if(!confirmDelete) return;
-//     // Redistribute all exiting member current debts as investments for the remaining members as per new share value. Also redistribute the interests on Loan to the other members interestsOnLoan as per new share value
-//      // Get member data before deleting
-//         const memberRes = await fetch(`http://localhost:3000/members/${memberId}`);
-//         const memberToDelete = await memberRes.json();
-//         const interestOnLoan = memberToDelete.interestOnLoan;
-//         const currentDebt = memberToDelete.currentDebt;
-
-//         // Get all members to recalculate
-//         const allMembersRes = await fetch(`http://localhost:3000/members`);
-//         const allMembers = await allMembersRes.json();
-
-//         // Filter remaining members (excluding the one to delete)
-//         const remainingMembers = allMembers.filter(eachmember => eachmember.id !== memberId);
-
-//         // Calculate total share percent for remaining members
-//         const totalShare = remainingMembers.reduce((sum,memberRemaining) => sum + memberRemaining.sharePercent, 0);
-
-//         // Redistribute interestOnLoan and currentDebt
-//         for (const member of remainingMembers) {
-//             const shareRatio = member.sharePercent / totalShare;
-//             const updatedInterest = member.interestOnLoan + (interestOnLoan * shareRatio);
-//             const updatedInvestment = member.currentInvestment + (currentDebt * shareRatio);
-
-//             // Update each member
-//             await fetch(`http://localhost:3000/members/${member.id}`, {
-//                 method: 'PATCH',
-//                 headers: { 'Content-Type': 'application/json' },
-//                 body: JSON.stringify({
-//                     interestOnLoan: Math.round(updatedInterest),
-//                     currentInvestment: Math.round(updatedInvestment)
-//                 })
-//               }
-//         )}
-//          function refresh() {
-//         ["investmentValue", "debtValue", "actualInterestValue", "expectedInterestValue", "totalNetValue"]
-//        .forEach(id => document.getElementById(id)?.remove());
-//        totalInvestment();
-//        totalDebt();
-//        totalActualInterests();
-//        totalExpectedInterests();
-//        netValue();
-//      }
-    
-
-//  refresh();
-        
-//      //Delete the member
-//      await fetch(`http://localhost:3000/members/${memberId}`, {method:'DELETE'});
-//       containerDiv.remove();
-//       //make the necessary adjustments once a member is removed
-//       await updateAllSharePercentages();
-//       document.getElementById("memberSummary").innerHTML = "";
-//       renderMembers();
-//   })
+  
 deleteButton.addEventListener('click', async (e) => {
   const containerDiv = e.target.closest(".container");
   const memberId = containerDiv.id 
@@ -332,9 +273,6 @@ deleteButton.addEventListener('click', async (e) => {
   })
   }
 //execute the render function after updating percentages
-updateAllSharePercentages().then(() => {
-  renderMembers();
-});
 
 //function to render the details of a member on the details div
 function renderDetails(member){
@@ -670,5 +608,63 @@ function renderDetails(member){
          }
         ))
     })
+  //function for rendering a piechart
+  let pieChartInstance = null;
+
+// Generates random rgba colors 
+function generateColors(count, alpha = 0.7) {
+  return Array.from({ length: count }, () => {
+    const r = Math.floor(Math.random() * 256); 
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  });
+}
+
+async function renderSharePieChart() {
+  await updateAllSharePercentages();
+  //fetch members from server
+  const res = await fetch('http://localhost:3000/members');
+  const members = await res.json();
+  //sets labels as member names and data as percentages
+  const labels = members.map(member => member.name);
+  const data = members.map(member => parseFloat(member.sharePercent)); //creates a new array of all members
+  //gets the chart from DOM
+  const canvas = document.getElementById('sharePieChart');
+  if (!canvas) return console.warn('Pie chart canvas not found.');
+  const ctx = canvas.getContext('2d');
+  //removes any existing pie chart
+  if (pieChartInstance) {
+    pieChartInstance.destroy();
+  }
+  //creates a new chart
+  pieChartInstance = new Chart(ctx, {
+    type: 'pie',                             //type of chart
+    data: {                                  //defines the data
+    labels: labels,
+    datasets: [{
+    label: 'Share Percent',
+    data: data,
+    backgroundColor: generateColors(data.length),  
+    borderWidth: 1
+      }]
+    },
+    options: {                              //extra options
+    responsive: true,                      //makes the pie chart responsive
+    plugins: {
+        legend: {
+          position: 'left'},
+        title: {
+          display: true,
+          text: 'Member Share Percentages'}
+      }
+    }
+  });
+}
+//call the different functions for execution
+updateAllSharePercentages().then(() => {
+ renderMembers();
+ renderSharePieChart();
+});
 
 })

@@ -9,7 +9,7 @@
       "repayments": 0,
       "dividends": 357,
       "InterestsRepayed": 385,
-      "sharePercent": 16.74,
+      "sharePercent": 15.25,
       "interestsOnLoan": 0
     },
     {
@@ -21,7 +21,7 @@
       "repayments": 0,
       "dividends": 357,
       "InterestsRepayed": 385,
-      "sharePercent": 16.74,
+      "sharePercent": 15.25,
       "interestsOnLoan": 0
     },
     {
@@ -33,7 +33,7 @@
       "repayments": 0,
       "dividends": 357,
       "InterestsRepayed": 385,
-      "sharePercent": 16.74,
+      "sharePercent": 15.25,
       "interestsOnLoan": 0
     },
     {
@@ -45,32 +45,32 @@
       "repayments": 0,
       "dividends": 286,
       "InterestsRepayed": 308,
-      "sharePercent": 13.39,
+      "sharePercent": 12.2,
       "interestsOnLoan": 0
     },
     {
       "id": "6",
       "name": "Grace Otieno",
       "image": "https://img.freepik.com/free-photo/african-woman-posing-looking-up_23-2148747978.jpg?semt=ais_items_boosted&w=740",
-      "currentInvestment": 361306,
+      "currentInvestment": 411306,
       "currentDebts": 0,
       "repayments": 0,
       "dividends": 500,
       "InterestsRepayed": 538,
-      "sharePercent": 23.43,
+      "sharePercent": 24.31,
       "interestsOnLoan": 0
     },
     {
       "id": "72bd",
       "name": "Dennis Karanja",
       "image": "https://avatars.githubusercontent.com/u/125461842?s=400&u=8e2a88bc6e23a248674d7ddb544aeadcae9d135c&v=4",
-      "currentInvestment": 200000,
+      "currentInvestment": 300000,
       "currentDebts": 0,
       "repayments": 0,
       "dividends": 0,
       "InterestsRepayed": 0,
       "interestsOnLoan": 0,
-      "sharePercent": 12.97
+      "sharePercent": 17.73
     }
   ]
 }

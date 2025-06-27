@@ -151,3 +151,10 @@ label{
     gap: 20px;
     align-items:baseline;
 }
+.piechart{
+    display: flex;
+    max-height: 500px;
+    max-width: 500px;
+    height: 30%;
+    width: 30%;
+}
