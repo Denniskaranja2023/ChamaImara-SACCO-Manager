@@ -1,7 +1,7 @@
 
 document.addEventListener('DOMContentLoaded',()=>{ 
   //Functions for the Chama Agrregate values
-  const baseURL= "http://localhost:3000/members"
+  const baseURL= `https://chamaimara-server.onrender.com/members`
   //1. A function for rendering the total investment of the Chama
    function totalInvestment() {
     fetch(`${baseURL}`).then(res=>res.json()).then(members=> { 

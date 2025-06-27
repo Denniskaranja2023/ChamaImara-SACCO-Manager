@@ -9,7 +9,7 @@
       "repayments": 0,
       "dividends": 0,
       "InterestsRepayed": 0,
-      "sharePercent": 16.67,
+      "sharePercent": 16,
       "interestsOnLoan": 0
     },
     {
@@ -21,7 +21,7 @@
       "repayments": 0,
       "dividends": 0,
       "InterestsRepayed": 0,
-      "sharePercent": 16.67,
+      "sharePercent": 16,
       "interestsOnLoan": 0
     },
     {
@@ -33,7 +33,7 @@
       "repayments": 0,
       "dividends": 0,
       "InterestsRepayed": 0,
-      "sharePercent": 16.67,
+      "sharePercent": 16,
       "interestsOnLoan": 0
     },
     {
@@ -45,19 +45,19 @@
       "repayments": 0,
       "dividends": 0,
       "InterestsRepayed": 0,
-      "sharePercent": 16.67,
+      "sharePercent": 16,
       "interestsOnLoan": 0
     },
     {
       "id": "6",
       "name": "Grace Otieno",
       "image": "https://img.freepik.com/free-photo/african-woman-posing-looking-up_23-2148747978.jpg?semt=ais_items_boosted&w=740",
-      "currentInvestment": 200000,
+      "currentInvestment": 250000,
       "currentDebts": 0,
       "repayments": 0,
       "dividends": 0,
       "InterestsRepayed": 0,
-      "sharePercent": 16.67,
+      "sharePercent": 20,
       "interestsOnLoan": 0
     },
     {
@@ -69,8 +69,8 @@
       "repayments": 0,
       "dividends": 0,
       "InterestsRepayed": 0,
-      "interestsOnLoan": 0,
-      "sharePercent": 16.67
+      "sharePercent": 16,
+      "interestsOnLoan": 0
     }
   ]
 }
