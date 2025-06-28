@@ -16,16 +16,16 @@ ChamaImara is an elaborate financial manager for small and mid-sized investment 
 ## Features
 1. Aggregate section.
 
-   Whenever a new member entry is made, this section aggregates the values of each member and updates to reflect the changes made on individual
+   Whenever a new entry is made on an individual, this section aggregates the values of each member and updates to reflect the changes made on individual
 2. Member Summary section
 
-   Any existing or newly added members appear on this section with their current investment, debt,dividends and share percent displayed. A member may be deleted using delete button and their data edited by clicking the edit button. Once a member is deleted, any current debts are redistributed to existing members as total investments(to show ) as per their share percent
+   Any existing or newly added members appear on this section with their current investment, debt,dividends and share percent displayed. A member may be deleted using delete button and their data edited by clicking the edit button. Once a member is deleted, any current debts are redistributed to existing members as total investments(to show their debt has been subtracted from their investments and redistributed to remaining members) as per their share percent
 3. The Member Details section
 
    Once the edit button of a member is clicked, a form for the editing of their data appears in this section. You may input a new investment, debt or repayment and observe the values of members in the other sections update to reflect the inputs. Note that a new amount borrowed cannot be inputed if there are any outstanding debts. Also, a new amount borrowed may not be inputed for a member if the value exceeds 40% of their current investment. These are features that can be reengineered as per investment group policy
 4. Add new Member Section
 
-   In case of a new admission to the investment group, the new member data can be added in the form at this section. ONce data is submitted, the new member appears on the summary section and all the other sections refresh to reflect their new investment
+   In case of a new admission to the investment group, the new member data can be added in the form at this section. Once data is submitted, the new member appears on the summary section and all the other sections refresh to reflect their new investment
 5. Statistics section
 
    A pie chart is generated as soon as there are any changes in the member investments. Each member share percent can be viewed by hovering over the pie chart
@@ -41,15 +41,15 @@ You may access the live site of this application [here](https://denniskaranja202
 
 1. Clone this repository using
  
-   ```git@github.com:Denniskaranja2023/ChamaImara-SACCO-Manager.git```
+      ```git@github.com:Denniskaranja2023/ChamaImara-SACCO-Manager.git```
 
 2. Navigate to the project directory
  
-   ```cd ChamaImara-SACCO-Manager```
+      ```cd ChamaImara-SACCO-Manager```
 
 3. Open the index.html file to view contents of the page
 
-   ``` open index.html```
+      ``` open index.html```
 ## Technologies Used
 JavaScript(ES6)
 
