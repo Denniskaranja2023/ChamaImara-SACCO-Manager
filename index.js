@@ -603,16 +603,16 @@ function renderDetails(member){
           const summaryDiv= document.getElementById("memberSummary")
           summaryDiv.innerHTML=" " //clear summary Div
           renderMembers();
+          renderSharePieChart();
           const investDisplay= document.getElementById('investmentValue')
           investDisplay.remove() //removes former total display
           totalInvestment();  //calls function to update newinvestment Total
           const netValueDisplay= document.getElementById('totalNetValue')
           netValueDisplay.remove() //removes former netValue
           netValue(); //calls function to update netValue
-          renderSharePieChart();
-          newMemberForm.reset();//resets form
          }
         ))
+        newMemberForm.reset();//resets form
     })
   //function for rendering a piechart
   let pieChartInstance = null;
