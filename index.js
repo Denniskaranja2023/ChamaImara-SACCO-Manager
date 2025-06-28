@@ -442,7 +442,7 @@ function renderDetails(member){
         if(member.currentDebts !==0) {
           alert("Member must first clear outstanding debt")
           return;}
-        //terminates if member borrows more than half their investments
+        //terminates if member borrows more than 40% their investments
         else if(newAmountBorrowed> 0.4*member.currentInvestment){
           alert("Member cannot borrow more than 40% of their savings")
           return;
@@ -526,6 +526,7 @@ function renderDetails(member){
       fetch(`${baseURL}/${memberId}`).then(res=>res.json()).then(member=>{
          let newDebtTotal;
          let newInterestRepayed;
+        if(member.currentDebts ===0){return alert("There are no current Debts")}
         if((member.currentDebts-repaymentValue) > 0){
              newDebtTotal= (member.currentDebts- repaymentValue);
             }
