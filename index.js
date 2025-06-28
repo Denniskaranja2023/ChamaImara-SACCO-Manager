@@ -609,6 +609,7 @@ function renderDetails(member){
           const netValueDisplay= document.getElementById('totalNetValue')
           netValueDisplay.remove() //removes former netValue
           netValue(); //calls function to update netValue
+          renderSharePieChart();
           newMemberForm.reset();//resets form
          }
         ))
